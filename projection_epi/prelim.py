@@ -140,3 +140,15 @@ def bounds(phi,M,sigma,zero_tol):
             M *= (1/sigma)
             aux = phi(M)
         return [M*sigma, M,1]
+    
+# def bisection(phi,mu_d,mu_u,eps):
+#     mu_star = (mu_d + mu_u)/2
+#     aux = phi(mu_star)
+#     while abs(aux) > eps:
+#         if aux > 0:
+#             mu_u = mu_star
+#         else:
+#             mu_d = mu_star
+#         mu_star = (mu_d + mu_u)/2
+#         aux = phi(mu_star)
+#     return mu_star
