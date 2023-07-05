@@ -9,6 +9,7 @@ import math as mt
 import proxop as pr
 #from matplotlib import pyplot as plt
 from scipy.optimize import bisect
+from scipy.optimize import newton
 #from proxop.utils.lambert_W import lambert_W
 import time
 import random
@@ -117,24 +118,35 @@ def prox_f_star(x, Gamma):
     output : float
         Evaluation of the proximity operator.
     """
-    if Gamma <= 0.0:
+    if Gamma < 0.0:
         raise ValueError(
             "'gamma' in prox_{gamma * e^*} "
-            + "must be strictly positive"
+            + "must be greater or equal than 0"
         )
+    if Gamma == 0.0:
+        return P_cdom_star(x)
     else:
         return (x- Gamma*pr.Exp().prox([x/Gamma], gamma=float(1/Gamma)))[0]
 
 def bounds(phi,M,sigma,zero_tol):
     aux = phi(M)
     if abs(aux) < zero_tol:
-        return [M, -1]
-    while aux <= 0:
-        if abs(aux) < zero_tol:
-            return [M,-1,-1]
-        M *= sigma
-        aux = phi(M)
-    return [M, M/sigma,1]
+        return [M,-1 -1]
+    if aux <= 0:
+
+        while aux <= 0:
+            if abs(aux) < zero_tol:
+                return [M,-1,-1]
+            M *= sigma
+            aux = phi(M)
+        return [M, M/sigma,1]
+    if aux >= 0:
+        while aux >= 0:
+            if abs(aux) < zero_tol:
+                return [M,-1,-1]
+            M *= (1/sigma)
+            aux = phi(M)
+        return [M*sigma, M,1]
 #%%
 # def bisection(phi,mu_d,mu_u,eps):
 #     mu_star = (mu_d + mu_u)/2
@@ -151,9 +163,12 @@ def bounds(phi,M,sigma,zero_tol):
 def prox_f_persp(x,
                  eta,
                  Gamma,
+                 M,
+                 sigma,
                  mu_d = float(10**(-10)),
                  mu_u = float(10**5),
-                 zero_tol = 10**(-16)):
+                 zero_tol = 10**(-16)
+                 ):
     """ 
     Calculate the evaluation of the proximity operator for the 
     perspective of the exponential function.
@@ -190,25 +205,52 @@ def prox_f_persp(x,
     else:
         if x >= 0 :
             mu_u = l
+            mu_d = 0
         else: 
-            aux_prox = prox_star(mu_u)
-            aux = mu_u - eta - Gamma*f_star(aux_prox)
-            while aux <=0:
-                if abs(aux) <= zero_tol:
-                    return [x - Gamma*aux_prox, mu_u]
-                mu_u *= 10
-                aux_prox = prox_star(mu_u)
-                aux = mu_u - eta - Gamma*f_star(aux_prox)
-            aux_prox = prox_star(mu_d)
-            aux = mu_d - eta - Gamma*f_star(aux_prox)
-            while aux >=0:
-                if abs(aux) <= zero_tol:
-                    return [x - Gamma*aux_prox, mu_d]
-                mu_d *= 10**(-1)
-                aux_prox = prox_star(mu_u)
-                aux = mu_u - eta - Gamma*f_star(aux_prox)
+            bound = bounds(phi, M, sigma, zero_tol)
+            if bound[2] == -1:
+                return [x - Gamma*prox_star(bound[0]), bound[0]] 
+            else:
+                mu_d = bound[1]
+                mu_u = bound[0]
         mu_star = bisect(phi,mu_d,mu_u)
         return [x - Gamma*prox_star(mu_star), mu_star]
+
+#%%
+N = 1000
+x_array = [random.randint(-20, 20)*random.random() for i in range(0,N)]
+eta_array = [random.randint(-20, 20)*random.random() for i in range(0,N)]
+Gamma_array = [random.randint(1, 20)*random.random() for i in range(0,N)]
+#%% 
+t_0 = time.time()
+for i in range(0,N):
+    print ("\nx=",x_array[i],
+            "\neta = ",eta_array[i],
+            "\nGamma = ", Gamma_array[i],
+            "\ni = ",i,
+            "\nprox_f_persp(x,eta,Gamma) = ",prox_f_persp(x_array[i],
+                                                          eta_array[i],
+                                                          Gamma_array[i],
+                                                          1,
+                                                          2)
+            )
+t_f = time.time()
+print("\nelapsed time =",t_f - t_0,"seconds")
+#%%
+t_0 = time.time()
+for i in range(0,N):
+    prox_f_persp(x_array[i],eta_array[i],Gamma_array[i],1,2)
+t_f = time.time()
+print("\nelapsed time =",t_f - t_0,"seconds")
+#%%
+x = x_array[11]
+eta = eta_array[11]
+Gamma = Gamma_array[1]
+t_0 = time.time()
+print(prox_f_persp(x_array[i],eta_array[i],Gamma_array[i],1,2))
+t_f = time.time()
+print("\nelapsed time =",t_f - t_0,"seconds")
+#%%
 def f_persp_prox(x,
                  eta,
                  Gamma,
@@ -245,23 +287,7 @@ def f_persp_prox(x,
                 aux = nu_d - eta - Gamma*f_star(aux_prox) 
         nu_star = bisect(phi,nu_d,nu_u)
         return nu_star*pr.Exp()(pr.Exp().prox(x/nu_star, gamma=Gamma/nu_star))
-#%%
-x_array = [random.randint(-100, 100)*random.random() for i in range(0,100)]
-eta_array = [random.randint(-100, 100)*random.random() for i in range(0,100)]
-Gamma_array = [random.randint(1, 100)*random.random() for i in range(0,100)] 
-t_0 = time.time()
-for i in range(0,100):
-    prox_f_persp(x_array[i],eta_array[i],Gamma_array[i])
-    print ("\nx=",x_array[i],
-            "\neta = ",eta_array[i],
-            "\nGamma = ", Gamma_array[i],
-            "\ni = ",i,
-            "\nprox_f_persp(x,eta,Gamma) = ",prox_f_persp(x_array[i],
-                                                          eta_array[i],
-                                                          Gamma_array[i])
-            )
-t_f = time.time()
-print("\nelapsed time =",t_f - t_0,"seconds")
+
 #%%
 def proj_epi(x,
              eta,
