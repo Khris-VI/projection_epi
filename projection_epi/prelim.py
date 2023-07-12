@@ -5,7 +5,7 @@ Created on Wed Jul  5 11:56:02 2023
 @author: Cristobal
 """
 
-import math as mt
+import numpy as np
 import proxop as pr
 def P_cdom_star(x):
     """ 
@@ -65,11 +65,11 @@ def f_star(x):
         Evaluation of the perspective of the exponential function.
     """
     if x>0:
-        return x*mt.log(x) - x 
+        return x*np.log(x) - x 
     elif x == 0:
         return float(0)
     else:
-        return mt.inf
+        return np.inf
     
 def f_persp(x,eta):
     """ 
@@ -88,11 +88,11 @@ def f_persp(x,eta):
         Evaluation of the perspective of the exponential function.
     """
     if eta > 0:
-        return eta*mt.exp(x/eta)
+        return eta*np.exp(x/eta)
     elif eta == 0 and x <=0:
         return 0 
     else:
-        return mt.inf
+        return np.inf
     
 def prox_f_star(x, Gamma):
     """ 
@@ -126,7 +126,6 @@ def bounds(phi,M,sigma,zero_tol):
     if abs(aux) < zero_tol:
         return [M,-1 -1]
     if aux <= 0:
-
         while aux <= 0:
             if abs(aux) < zero_tol:
                 return [M,-1,-1]
