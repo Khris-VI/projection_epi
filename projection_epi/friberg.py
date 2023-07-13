@@ -339,9 +339,10 @@ vp, vd = proj_primalexpcone(v0)
 solutionreport(v0, vp, vd)
 #%%
 N = 1000
-x = [random.randint(-10, 10)*random.random() for i in range(0,N)]
-eta = [random.randint(-10, 10)*random.random() for i in range(0,N)]
-delta = [random.randint(-10, 10)*random.random() for i in range(0,N)] 
+n = 10**3
+x = [random.randint(-n, n)*random.random() for i in range(0,N)]
+eta = [random.randint(-n, n)*random.random() for i in range(0,N)]
+delta = [random.randint(-n, n)*random.random() for i in range(0,N)] 
 v0 = [np.array([x[i],eta[i],delta[i]]) for i in range(0,N)]
 times = []
 t_0 = time.time()
