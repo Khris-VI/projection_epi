@@ -4,85 +4,77 @@ Created on Thu Jul 13 12:43:43 2023
 
 @author: Cristobal
 """
-from f_persp_prox import f_persp_prox 
-from prox_perspective import prox_f_persp
+#from prelim import P_cdom_star,P_cdom_persp,f_star,f_persp,prox_f_star,bounds
+#from f_persp_prox import f_persp_prox 
+#from prox_perspective import prox_f_persp
+from epiproj import proj_epi
+from friberg import proj_primalexpcone
 #import math as mt
 import numpy as np
-import proxop as pr
-from prelim import P_cdom_star,P_cdom_persp,f_star,f_persp,prox_f_star,bounds
+#import proxop as pr
 from matplotlib import pyplot as plt
-from scipy.optimize import root_scalar
+#from scipy.optimize import root_scalar
 import time
 import random
 #%%
 N = 10000
-n = 10**3
-x_array = [random.randint(-n, n)*random.random() for i in range(0,N)]
-eta_array = [random.randint(-n, n)*random.random() for i in range(0,N)]
-Gamma_array = [random.randint(1, n)*random.random() for i in range(0,N)]
+n = 20
+x = [random.randint(-n, n)*random.random() for i in range(0,N)]
+eta = [random.randint(-n, n)*random.random() for i in range(0,N)]
+delta = [random.randint(-n, n)*random.random() for i in range(0,N)] 
+#%%
 times = []
+proj_us = []
 t_0 = time.time()
 for i in range(0,N):
     t_p = time.time()
-    print ("\nx=",x_array[i],
-            "\neta = ",eta_array[i],
-            "\nGamma = ", Gamma_array[i],
-            "\ni = ",i,
-            "\nprox_f_persp(x,eta,Gamma) = ",prox_f_persp(x_array[i],
-                                                          eta_array[i],
-                                                          Gamma_array[i],
-                                                          0.1,
-                                                          2,
-                                                          alg = "brentq")
-            )
+# =============================================================================
+#     print ("\nx=",x[i],
+#             "\neta = ",eta[i],
+#             "\ndelta = ", delta[i],
+#             "\ni = ",i,
+#             )
+# =============================================================================
+    P = proj_epi(x[i],eta[i],delta[i],1,2)
     t_pf = time.time()
     times.append(t_pf-t_p)
+    proj_us.append(np.array(P))
+    print("\nproj_epi(x,eta,delta) = ",P)
 t_f = time.time()
 print("\nelapsed time =",t_f - t_0,"seconds")
 print("\naverage elapsed time =","{:.2e}".format(sum(times)/len(times)),
       "seconds")
 #%%
-N = 10000
-x_array = [random.randint(-10**3, 10**3)*random.random() for i in range(0,N)]
-eta_array = [random.randint(-10**3, 10**3)*random.random() for i in range(0,N)]
-Gamma_array = [random.randint(1, 10**4)*random.random() for i in range(0,N)]
+v0 = [np.array([x[i],eta[i],delta[i]]) for i in range(0,N)]
 times = []
+proj_f = []
 t_0 = time.time()
-f_list = []
 for i in range(0,N):
-    t_p = time.time()
-    aux_f = f_persp_prox(x_array[i],eta_array[i],
-                         Gamma_array[i],
-                         0.1,
-                         2,
-                         alg = "brentq")
-    f_list.append(aux_f)
-    print ("\nx=",x_array[i],
-            "\neta = ",eta_array[i],
-            "\nGamma = ", Gamma_array[i],
-            "\ni = ",i,
-            "\nprox_f_persp(x,eta,Gamma) = ",aux_f
-            )
-    t_pf = time.time()
-    times.append(t_pf-t_p)
+    tp = time.time()
+    P_f = proj_primalexpcone(v0[i])
+    tpf = time.time()
+    times.append(tpf-tp)
+    proj_f.append(P_f[0])
+    print("\nproj_epi(x,eta,delta) = ",P_f)
 t_f = time.time()
 print("\nelapsed time =",t_f - t_0,"seconds")
 print("\naverage elapsed time =","{:.2e}".format(sum(times)/len(times)),
       "seconds")
-X = np.linspace(0, len(f_list),len(f_list))
-plt.plot(X,f_list, color = "blue")
+#%%
+#ERRORS
+diff = np.array(proj_us) - np.array(proj_f)
+errors = np.linalg.norm(diff,ord=2,axis = 1)
+#%%
+# No axis mentioned, so works on entire array
+max_index = np.argmax(errors)
+print("\nMax element index: ", max_index)
+print("\nMax element : ", errors[max_index])
+errors[np.argmax(errors)]
+err_2 = np.delete(errors, max_index)
+#%%
+max_index2 = np.argmax(err_2)
+print("\nMax element index: ", max_index2)
+print("\nMax element : ", err_2[max_index2])
+#%%
+plt.plot(np.delete(errors, max_index))
 plt.show()
-
-n = f_list.index(max(f_list))
-print ("\nMax Value info: \n------------------------------- \n",
-       "\nx=",x_array[n],
-        "\neta = ",eta_array[n],
-        "\nGamma = ", Gamma_array[n],
-        "\ni = ",n,
-        "\nf_persp_prox(x,eta,Gamma) = ",f_persp_prox(x_array[n],
-                                                      eta_array[n],
-                                                      1,
-                                                      0.1,
-                                                      2,
-                                                      alg = "brentq")
-        )

@@ -8,8 +8,6 @@ from prelim import P_cdom_star,P_cdom_persp,f_star,prox_f_star,bounds
 from scipy.optimize import root_scalar
 #%%
 def prox_f_persp(x,eta,Gamma,M,sigma,
-                 mu_d = float(10**(-10)),
-                 mu_u = float(10**5),
                  zero_tol = 10**(-16),
                  alg = "brentq"):
     """ 
@@ -38,13 +36,22 @@ def prox_f_persp(x,eta,Gamma,M,sigma,
     output  : float
         Evaluation of the proximity operator.
     """
-    if Gamma == 0:
+    
+    if Gamma < 0.0:
+        raise ValueError(
+            "'gamma' in prox_{gamma * e^*} "
+            + "must be greater or equal than 0"
+        )
+    if Gamma < zero_tol:
         return P_cdom_persp(x, eta)
     P = P_cdom_star(x/Gamma)
     l = eta + Gamma * f_star(P)
-    prox_star = lambda mu : prox_f_star(x/Gamma, mu/Gamma)
-    phi = lambda mu : mu - eta - Gamma*f_star(prox_f_star(x/Gamma, mu/Gamma))
-    if l <= 0:
+    prox_star = lambda mu : prox_f_star(x/Gamma, mu/Gamma, zero_tol)
+    phi = lambda mu : mu - eta - Gamma*f_star(prox_f_star(x/Gamma,
+                                                          mu/Gamma,
+                                                          zero_tol
+                                                          ))
+    if l < zero_tol:
         return [x - Gamma*P, 0]
     else:
         if x >= 0 :
@@ -59,8 +66,8 @@ def prox_f_persp(x,eta,Gamma,M,sigma,
             if bound[2] == -1:
                 return [x - Gamma*prox_star(bound[0]), bound[0]] 
             else:
-                mu_d = bound[1]
-                mu_u = bound[0]
+                mu_d = bound[0]
+                mu_u = bound[1]
         if alg == "newton":
             mu_star = root_scalar(phi,
                                   x0 = M,

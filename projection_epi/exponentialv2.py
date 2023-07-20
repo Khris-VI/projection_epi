@@ -119,10 +119,11 @@ def proj_epi(x,eta,delta,M,sigma,
         aux_prox = prox_mu(mu_star)
         return [aux_prox[0],aux_prox[1],delta + mu_star]
 #%%
-N = 10000
-x = [random.randint(-20, 20)*random.random() for i in range(0,N)]
-eta = [random.randint(-20, 20)*random.random() for i in range(0,N)]
-delta = [random.randint(-20, 20)*random.random() for i in range(0,N)] 
+N = 1000
+n = 20
+x = [random.randint(-n, n)*random.random() for i in range(0,N)]
+eta = [random.randint(-n, n)*random.random() for i in range(0,N)]
+delta = [random.randint(-n, n)*random.random() for i in range(0,N)] 
 times = []
 t_0 = time.time()
 for i in range(0,N):

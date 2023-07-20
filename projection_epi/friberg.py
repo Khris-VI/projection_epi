@@ -338,7 +338,7 @@ v0 = np.array([1, 1, 1], dtype=float)
 vp, vd = proj_primalexpcone(v0)
 solutionreport(v0, vp, vd)
 #%%
-N = 1000
+N = 10000
 n = 10**3
 x = [random.randint(-n, n)*random.random() for i in range(0,N)]
 eta = [random.randint(-n, n)*random.random() for i in range(0,N)]

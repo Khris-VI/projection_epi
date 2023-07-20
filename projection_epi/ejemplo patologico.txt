@@ -1,3 +1,115 @@
-x= -95.70690747688141 
-eta =  2.583175059523779 
-delta =  -87.42666679964313
+proj_epi:
+-----------------------------
+x= 0.0010442307205886792 
+eta =  -11.586759833307797 
+delta =  7.871833694077916 
+i =  7207
+Traceback (most recent call last):
+
+  File ~\anaconda3\envs\opti\lib\site-packages\spyder_kernels\py3compat.py:356 in compat_exec
+    exec(code, globals, locals)
+
+  File c:\users\crist\desktop\investigación\paper cone projection\code\projection_epi\exponentialv2.py:156
+    print("\nproj_epi(x,eta,delta) = ",proj_epi(x[n],
+
+  File c:\users\crist\desktop\investigación\paper cone projection\code\projection_epi\exponentialv2.py:98 in proj_epi
+    bound = bounds(phi, M, sigma, zero_tol)
+
+  File ~\Desktop\Investigación\Paper cone projection\code\projection_epi\prelim.py:140 in bounds
+    aux = phi(M)
+
+  File c:\users\crist\desktop\investigación\paper cone projection\code\projection_epi\exponentialv2.py:81 in <lambda>
+    phi = lambda mu : mu + delta - f_persp_prox(x,eta,mu,M,sigma)
+
+  File ~\Desktop\Investigación\Paper cone projection\code\projection_epi\f_persp_prox.py:28 in f_persp_prox
+    if abs(phi(nu_u)) < zero_tol:
+
+  File ~\Desktop\Investigación\Paper cone projection\code\projection_epi\f_persp_prox.py:21 in <lambda>
+    phi = lambda nu : nu - eta - Gamma*f_star(prox_f_star(x/Gamma,nu/Gamma))
+
+  File ~\Desktop\Investigación\Paper cone projection\code\projection_epi\prelim.py:122 in prox_f_star
+    return (x- Gamma*pr.Exp().prox([x/Gamma], gamma=float(1/Gamma)))[0]
+
+  File ~\anaconda3\envs\opti\lib\site-packages\proxop\scalar\Exp.py:81 in prox
+    self._check(x, gamma)
+
+  File ~\anaconda3\envs\opti\lib\site-packages\proxop\scalar\Exp.py:101 in _check
+    raise ValueError(
+
+ValueError: 'gamma' (or all of its elements if it is an array)must be strictly positive
+------------------------------------------------
+x= 0.004522494015489764 
+eta =  -16.061209195786002 
+delta =  2.4070860915310877 
+i =  2420
+Traceback (most recent call last):
+
+  File ~\anaconda3\envs\opti\lib\site-packages\spyder_kernels\py3compat.py:356 in compat_exec
+    exec(code, globals, locals)
+
+  File c:\users\crist\desktop\investigación\paper cone projection\code\projection_epi\exponentialv2.py:135
+    print("\nproj_epi(x,eta,delta) = ",proj_epi(x[i],
+
+  File c:\users\crist\desktop\investigación\paper cone projection\code\projection_epi\exponentialv2.py:98 in proj_epi
+    bound = bounds(phi, M, sigma, zero_tol)
+
+  File ~\Desktop\Investigación\Paper cone projection\code\projection_epi\prelim.py:140 in bounds
+    aux = phi(M)
+
+  File c:\users\crist\desktop\investigación\paper cone projection\code\projection_epi\exponentialv2.py:81 in <lambda>
+    phi = lambda mu : mu + delta - f_persp_prox(x,eta,mu,M,sigma)
+
+  File ~\Desktop\Investigación\Paper cone projection\code\projection_epi\f_persp_prox.py:28 in f_persp_prox
+    if abs(phi(nu_u)) < zero_tol:
+
+  File ~\Desktop\Investigación\Paper cone projection\code\projection_epi\f_persp_prox.py:21 in <lambda>
+    phi = lambda nu : nu - eta - Gamma*f_star(prox_f_star(x/Gamma,nu/Gamma))
+
+  File ~\Desktop\Investigación\Paper cone projection\code\projection_epi\prelim.py:122 in prox_f_star
+    return (x- Gamma*pr.Exp().prox([x/Gamma], gamma=float(1/Gamma)))[0]
+
+  File ~\anaconda3\envs\opti\lib\site-packages\proxop\scalar\Exp.py:81 in prox
+    self._check(x, gamma)
+
+  File ~\anaconda3\envs\opti\lib\site-packages\proxop\scalar\Exp.py:101 in _check
+    raise ValueError(
+
+ValueError: 'gamma' (or all of its elements if it is an array)must be strictly positive
+----------------------------------------------------------
+x= 0.00932272288422531 
+eta =  -19.964867500406335 
+delta =  6.577461570498865 
+i =  1659
+Traceback (most recent call last):
+
+  File ~\anaconda3\envs\opti\lib\site-packages\spyder_kernels\py3compat.py:356 in compat_exec
+    exec(code, globals, locals)
+
+  File c:\users\crist\desktop\investigación\paper cone projection\code\projection_epi\exponentialv2.py:135
+    print("\nproj_epi(x,eta,delta) = ",proj_epi(x[i],
+
+  File c:\users\crist\desktop\investigación\paper cone projection\code\projection_epi\exponentialv2.py:98 in proj_epi
+    bound = bounds(phi, M, sigma, zero_tol)
+
+  File ~\Desktop\Investigación\Paper cone projection\code\projection_epi\prelim.py:140 in bounds
+    aux = phi(M)
+
+  File c:\users\crist\desktop\investigación\paper cone projection\code\projection_epi\exponentialv2.py:81 in <lambda>
+    phi = lambda mu : mu + delta - f_persp_prox(x,eta,mu,M,sigma)
+
+  File ~\Desktop\Investigación\Paper cone projection\code\projection_epi\f_persp_prox.py:28 in f_persp_prox
+    if abs(phi(nu_u)) < zero_tol:
+
+  File ~\Desktop\Investigación\Paper cone projection\code\projection_epi\f_persp_prox.py:21 in <lambda>
+    phi = lambda nu : nu - eta - Gamma*f_star(prox_f_star(x/Gamma,nu/Gamma))
+
+  File ~\Desktop\Investigación\Paper cone projection\code\projection_epi\prelim.py:122 in prox_f_star
+    return (x- Gamma*pr.Exp().prox([x/Gamma], gamma=float(1/Gamma)))[0]
+
+  File ~\anaconda3\envs\opti\lib\site-packages\proxop\scalar\Exp.py:81 in prox
+    self._check(x, gamma)
+
+  File ~\anaconda3\envs\opti\lib\site-packages\proxop\scalar\Exp.py:101 in _check
+    raise ValueError(
+
+ValueError: 'gamma' (or all of its elements if it is an array)must be strictly positive
