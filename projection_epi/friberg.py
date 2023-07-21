@@ -5,8 +5,6 @@ Created on Wed Jul  5 19:23:03 2023
 @author: Cristobal
 """
 import numpy as np
-import time
-import random
 def hfun(v0, rho):
     t0, s0, r0 = v0
     exprho = np.exp(rho)
@@ -333,26 +331,7 @@ def test(real):
         "avgtime": time / num_proj
     }
 #%%
-# Test example
-v0 = np.array([1, 1, 1], dtype=float)
+#Test example
+v0 = np.array([1, 1, np.exp(1)], dtype=float)
 vp, vd = proj_primalexpcone(v0)
 solutionreport(v0, vp, vd)
-#%%
-N = 10000
-n = 10**3
-x = [random.randint(-n, n)*random.random() for i in range(0,N)]
-eta = [random.randint(-n, n)*random.random() for i in range(0,N)]
-delta = [random.randint(-n, n)*random.random() for i in range(0,N)] 
-v0 = [np.array([x[i],eta[i],delta[i]]) for i in range(0,N)]
-times = []
-t_0 = time.time()
-for i in range(0,N):
-    tp = time.time()
-    print(i)
-    proj_primalexpcone(v0[i])
-    tpf = time.time()
-    times.append(tpf-tp)
-t_f = time.time()
-print("\nelapsed time =",t_f - t_0,"seconds")
-print("\naverage elapsed time =","{:.2e}".format(sum(times)/len(times)),
-      "seconds")
